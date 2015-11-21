@@ -20,11 +20,11 @@ import java.util.List;
 
 /**
  * @class Drekkar
- * @brief
+ * @brief Main class of the library. Dispatches events among buses.
  */
 public class Drekkar {
     private static final Object busLock          = new Object();
-    private static final String DEFAULT_BUS_NAME = "default";
+    static final         String DEFAULT_BUS_NAME = "default";
 
     private String         name;
     private List<EventBus> buses;
@@ -141,5 +141,97 @@ public class Drekkar {
         }
     }
 
-    
+    void dispatch(final Arguments arguments) {
+        ThreadingHelper.background(
+            new Runnable() {
+                @Override
+                public void run() {
+                    Object data = null;
+
+                    if (arguments.eventData != null) {
+                        data = DataSerializer.deserialize(arguments.eventData);
+                    }
+
+                    synchronized (busLock) {
+                        for (EventBus b : buses) {
+                            final Object finalData = data;
+                            final EventBus finalBus = b;
+                            ThreadingHelper.background(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        finalBus.raise(arguments.eventName, finalData);
+                                    }
+                                }
+                            );
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    /**
+     * Current name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns default bus
+     *
+     * @param subscriber Subscriber
+     * @param webView    WebView to watch
+     * @param whenReady  Action to run when JS counterpart is ready
+     */
+    public static Drekkar getDefault(Object subscriber, WebView webView, WhenReady whenReady) {
+        Drekkar d = DrekkarFactory.getDefault();
+        d.addBus(subscriber, webView, whenReady, true);
+        return d;
+    }
+
+    /**
+     * Returns default bus and run callback on main thread
+     *
+     * @param subscriber Subscriber
+     * @param webView    WebView to watch
+     * @param whenReady  Action to run when JS counterpart is ready
+     */
+    public static Drekkar getDefault(Object subscriber, WebView webView, WhenReadyOnMain
+        whenReady) {
+        Drekkar d = DrekkarFactory.getDefault();
+        d.addBus(subscriber, webView, whenReady, false);
+        return d;
+    }
+
+    /**
+     * Returns custom bus
+     *
+     * @param subscriber Subscriber
+     * @param name       Bus name
+     * @param webView    WebView to watch
+     * @param whenReady  Action to run when JS counterpart is ready
+     */
+    public static Drekkar get(Object subscriber, String name, WebView webView, WhenReady
+        whenReady) {
+        Drekkar d = DrekkarFactory.get(name);
+        d.addBus(subscriber, webView, whenReady, true);
+        return d;
+    }
+
+    /**
+     * Returns custom bus and run callback on main thread
+     *
+     * @param subscriber Subscriber
+     * @param name       Bus name
+     * @param webView    WebView to watch
+     * @param whenReady  Action to run when JS counterpart is ready
+     */
+    public static Drekkar get(Object subscriber, String name, WebView webView, WhenReadyOnMain
+        whenReady) {
+        Drekkar d = DrekkarFactory.get(name);
+        d.addBus(subscriber, webView, whenReady, false);
+        return d;
+    }
 }
