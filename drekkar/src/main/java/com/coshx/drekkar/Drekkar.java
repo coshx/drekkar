@@ -73,10 +73,10 @@ public class Drekkar {
         synchronized (busLock) {
             for (EventBus b : buses) {
                 Object reference = b.getReference();
-                WebView webView = b.getWebView();
+                WebView busWebView = b.getWebView();
 
                 if (reference != null && reference.hashCode() == subscriber.hashCode()
-                    && webView != null && webView.hashCode() == subscriber.hashCode()) {
+                    && busWebView != null && busWebView.hashCode() == webView.hashCode()) {
                     if (inBackground) {
                         b.whenReady(whenReady);
                     } else {
