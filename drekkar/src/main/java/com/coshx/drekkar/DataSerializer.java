@@ -53,8 +53,9 @@ class DataSerializer {
         } else if (data instanceof String) {
             // As this string is going to be unwrapped from quotes, when passed to JS, all quotes need to be escaped
             outcome = data.toString();
-            outcome = outcome.replaceAll("\"", "\\\"");
-            outcome = outcome.replaceAll("'", "\'");
+            outcome = outcome.replaceAll("\"", "\\\\\\\"");
+            outcome = outcome.replaceAll("'", "\\\\\\'");
+            outcome = "\"" + outcome + "\"";
         } else if (data instanceof List) {
             // Array and Dictionary are serialized to JSON.
             // They should wrap only "basic" data (same types than supported ones)
