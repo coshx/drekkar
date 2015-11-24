@@ -117,6 +117,17 @@ public class MainActivity extends Activity {
             }
         );
 
+        findViewById(R.id.two_event_trigger).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(
+                        new Intent(getApplication(), TwoEventActivity.class)
+                    );
+                }
+            }
+        );
+
         findViewById(R.id.unregistration_trigger).setOnClickListener(
             new View.OnClickListener() {
                 @Override

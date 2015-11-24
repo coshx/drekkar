@@ -34,6 +34,7 @@
         <activity android:name=".ThreadingActivity" />
         <activity android:name=".TwoBucketActivity" />
         <activity android:name=".TwoBusActivity" />
+        <activity android:name=".TwoEventActivity" />
         <activity android:name=".UnregistrationActivity" />
     </application>
 
