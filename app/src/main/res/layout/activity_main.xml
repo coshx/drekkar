@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.coshx.drekkartest.MainActivity"
     >
 
-
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Basic triggering"
-        android:id="@+id/basic_triggering_trigger"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="34dp"
-        />
+        android:orientation="vertical"
+        >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Data"
-        android:id="@+id/event_data_trigger"
-        android:layout_alignBottom="@+id/basic_triggering_trigger"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="34dp"
-        android:layout_marginEnd="34dp"
-        />
-</RelativeLayout>
+
+        <Button
+            android:id="@+id/basic_triggering_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Basic triggering"
+            />
+
+        <Button
+            android:id="@+id/event_data_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Event Data"
+            />
+
+        <Button
+            android:id="@+id/event_name_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Event Name"
+            />
+
+    </LinearLayout>
+
+</ScrollView>
