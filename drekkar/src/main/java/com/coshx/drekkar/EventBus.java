@@ -25,6 +25,7 @@ public class EventBus implements IWebViewJSEndpoint {
     }
 
     private final Object initializationLock = new Object();
+    private final Object subscriberLock     = new Object();
 
     private WeakReference<Object>  reference;
     private WeakReference<WebView> webView;
@@ -90,20 +91,22 @@ public class EventBus implements IWebViewJSEndpoint {
      * Allows dispatcher to fire any event on this bus
      */
     void raise(final String name, final Object data) {
-        for (EventSubscriber s : subscribers) {
-            final EventSubscriber finalS = s;
-            if (s.name.equals(name)) {
-                Runnable action = new Runnable() {
-                    @Override
-                    public void run() {
-                        finalS.callback.run(name, data);
-                    }
-                };
+        synchronized (subscriberLock) {
+            for (EventSubscriber s : subscribers) {
+                final EventSubscriber finalS = s;
+                if (s.name.equals(name)) {
+                    Runnable action = new Runnable() {
+                        @Override
+                        public void run() {
+                            finalS.callback.run(name, data);
+                        }
+                    };
 
-                if (finalS.inBackground) {
-                    ThreadingHelper.background(action);
-                } else {
-                    ThreadingHelper.main(action);
+                    if (finalS.inBackground) {
+                        ThreadingHelper.background(action);
+                    } else {
+                        ThreadingHelper.main(action);
+                    }
                 }
             }
         }
@@ -250,7 +253,9 @@ public class EventBus implements IWebViewJSEndpoint {
      * @param callback  Action to run when fired
      */
     public void register(String eventName, Callback callback) {
-        subscribers.add(new EventSubscriber(eventName, callback, true));
+        synchronized (subscriberLock) {
+            subscribers.add(new EventSubscriber(eventName, callback, true));
+        }
     }
 
     /**
@@ -261,7 +266,9 @@ public class EventBus implements IWebViewJSEndpoint {
      * @param callback  Action to run when fired
      */
     public void registerOnMain(String eventName, Callback callback) {
-        subscribers.add(new EventSubscriber(eventName, callback, false));
+        synchronized (subscriberLock) {
+            subscribers.add(new EventSubscriber(eventName, callback, false));
+        }
     }
 
     public void unregister(Object subscriber) {
