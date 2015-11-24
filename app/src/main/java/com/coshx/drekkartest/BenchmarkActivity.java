@@ -35,7 +35,7 @@ public class BenchmarkActivity extends WebActivity {
                         );
 
                         bus.registerOnMain(
-                            "Main", new Callback() {
+                            "Main-" + i, new Callback() {
                                 @Override
                                 public void run(String name, Object data) {
                                     bus.post(name + "-confirmation");
