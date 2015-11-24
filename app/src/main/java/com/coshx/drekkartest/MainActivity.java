@@ -29,6 +29,17 @@ public class MainActivity extends Activity {
             }
         );
 
+        findViewById(R.id.benchmark_trigger).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(
+                        new Intent(getApplication(), BenchmarkActivity.class)
+                    );
+                }
+            }
+        );
+
         findViewById(R.id.event_data_trigger).setOnClickListener(
             new View.OnClickListener() {
                 @Override
@@ -46,6 +57,17 @@ public class MainActivity extends Activity {
                 public void onClick(View v) {
                     startActivity(
                         new Intent(getApplication(), EventNameActivity.class)
+                    );
+                }
+            }
+        );
+
+        findViewById(R.id.initialization_trigger).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(
+                        new Intent(getApplication(), InitializationActivity.class)
                     );
                 }
             }

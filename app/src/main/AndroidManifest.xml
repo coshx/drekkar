@@ -26,8 +26,10 @@
         </activity>
 
         <activity android:name=".BasicTriggeringActivity" />
+        <activity android:name=".BenchmarkActivity" />
         <activity android:name=".EventDataActivity" />
         <activity android:name=".EventNameActivity" />
+        <activity android:name=".InitializationActivity" />
     </application>
 
 </manifest>

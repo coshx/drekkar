@@ -23,6 +23,14 @@
             />
 
         <Button
+            android:id="@+id/benchmark_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Benchmark"
+            />
+
+        <Button
             android:id="@+id/event_data_trigger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,6 +44,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="34dp"
             android:text="Event Name"
+            />
+
+        <Button
+            android:id="@+id/initialization_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Initialization"
             />
 
     </LinearLayout>
