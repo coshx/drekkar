@@ -9,7 +9,7 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     bare: true,
-                    sourceMap: true
+                    sourceMap: false
                 },
                 files: {
                     '../drekkar/src/main/res/raw/drekkar.js': 'drekkar.coffee'
