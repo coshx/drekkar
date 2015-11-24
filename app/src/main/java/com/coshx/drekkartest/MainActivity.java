@@ -72,5 +72,16 @@ public class MainActivity extends Activity {
                 }
             }
         );
+
+        findViewById(R.id.threading_trigger).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(
+                        new Intent(getApplication(), ThreadingActivity.class)
+                    );
+                }
+            }
+        );
     }
 }
