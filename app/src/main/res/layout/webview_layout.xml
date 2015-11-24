@@ -7,7 +7,7 @@
     >
 
     <WebView
-        android:id="@+id/basic_triggering"
+        android:id="@+id/embedded_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

@@ -20,4 +20,16 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="34dp"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Data"
+        android:id="@+id/event_data_trigger"
+        android:layout_alignBottom="@+id/basic_triggering_trigger"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="34dp"
+        android:layout_marginEnd="34dp"
+        />
 </RelativeLayout>

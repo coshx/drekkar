@@ -23,7 +23,18 @@ public class MainActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     startActivity(
-                        new Intent(getApplicationContext(), BasicTriggeringActivity.class)
+                        new Intent(getApplication(), BasicTriggeringActivity.class)
+                    );
+                }
+            }
+        );
+
+        findViewById(R.id.event_data_trigger).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(
+                        new Intent(getApplication(), EventDataActivity.class)
                     );
                 }
             }

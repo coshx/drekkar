@@ -1,7 +1,6 @@
 package com.coshx.drekkartest;
 
 import android.os.Bundle;
-import android.webkit.WebView;
 
 import com.coshx.drekkar.Callback;
 import com.coshx.drekkar.Drekkar;
@@ -17,9 +16,6 @@ public class BasicTriggeringActivity extends WebActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.basic_triggering);
-
-        WebView webView = (WebView) findViewById(R.id.basic_triggering);
 
         Drekkar.getDefault(
             this, webView, new WhenReady() {
@@ -37,6 +33,6 @@ public class BasicTriggeringActivity extends WebActivity {
             }
         );
 
-        loadURL(webView, "basic_triggering");
+        loadURL("basic_triggering");
     }
 }
