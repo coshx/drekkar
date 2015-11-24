@@ -32,6 +32,7 @@
         <activity android:name=".InitializationActivity" />
         <activity android:name=".MultipleSubscriberActivity" />
         <activity android:name=".ThreadingActivity" />
+        <activity android:name=".TwoBucketActivity" />
         <activity android:name=".UnregistrationActivity" />
     </application>
 
