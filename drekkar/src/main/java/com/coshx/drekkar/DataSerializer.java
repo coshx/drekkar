@@ -1,10 +1,10 @@
 package com.coshx.drekkar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +15,34 @@ import java.util.Map;
  * @brief
  */
 class DataSerializer {
+    private static Map toMap(JSONObject object) throws JSONException {
+        Map dictionary = new HashMap();
+        Iterator<String> iterator = object.keys();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = object.get(key);
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+            dictionary.put(key, value);
+        }
+
+        return dictionary;
+    }
+
+    private static List toList(JSONArray array) throws JSONException {
+        List list = new ArrayList();
+        for (int i = 0, s = array.length(); i < s; i++) {
+            Object o = array.get(i);
+            if (o instanceof JSONObject) {
+                o = toMap((JSONObject) o);
+            }
+            list.add(o);
+        }
+        return list;
+    }
+
     static String serialize(Object data) {
         String outcome;
 
@@ -31,8 +59,6 @@ class DataSerializer {
             // Array and Dictionary are serialized to JSON.
             // They should wrap only "basic" data (same types than supported ones)
             outcome = new JSONArray((List) data).toString();
-        } else if (data.getClass().isArray()) {
-            outcome = new JSONArray(Arrays.asList(data)).toString();
         } else if (data instanceof Map) {
             outcome = new JSONObject((Map) data).toString();
         } else {
@@ -49,30 +75,13 @@ class DataSerializer {
 
                 if (first == '[' && last == ']') {
                     try {
-                        JSONArray a = new JSONArray(input);
-                        List outcome = new ArrayList();
-
-                        for (int i = 0, s = a.length(); i < s; i++) {
-                            outcome.add(a.get(i));
-                        }
-
-                        return outcome;
+                        return toList(new JSONArray(input));
                     } catch (Exception e) {
                         return null;
                     }
                 } else if (first == '{' && last == '}') {
                     try {
-                        JSONObject o = new JSONObject(input);
-                        Iterator<String> iterator = o.keys();
-                        Map<String, Object> outcome = new HashMap<>();
-
-                        while (iterator.hasNext()) {
-                            String key = iterator.next();
-                            outcome.put(key, o.get(key));
-                        }
-
-                        return outcome;
-
+                        return toMap(new JSONObject(input));
                     } catch (Exception e) {
                         return null;
                     }
