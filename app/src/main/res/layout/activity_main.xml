@@ -55,6 +55,14 @@
             />
 
         <Button
+            android:id="@+id/multiple_subscriber_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Multiple Subscribers"
+            />
+
+        <Button
             android:id="@+id/threading_trigger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

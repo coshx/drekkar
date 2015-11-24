@@ -30,6 +30,7 @@
         <activity android:name=".EventDataActivity" />
         <activity android:name=".EventNameActivity" />
         <activity android:name=".InitializationActivity" />
+        <activity android:name=".MultipleSubscriberActivity" />
         <activity android:name=".ThreadingActivity" />
         <activity android:name=".UnregistrationActivity" />
     </application>
