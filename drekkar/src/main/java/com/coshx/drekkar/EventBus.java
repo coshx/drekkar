@@ -92,7 +92,7 @@ public class EventBus implements IWebViewJSEndpoint {
     void raise(final String name, final Object data) {
         for (EventSubscriber s : subscribers) {
             final EventSubscriber finalS = s;
-            if (s.name == name) {
+            if (s.name.equals(name)) {
                 Runnable action = new Runnable() {
                     @Override
                     public void run() {
@@ -183,8 +183,9 @@ public class EventBus implements IWebViewJSEndpoint {
     public void handle(String busName, String eventName, String data) {
         // All buses are notified about that incoming event. Then, each bus has to investigate first if it
         // is a potential receiver
-        if (dispatcher.get() != null && dispatcher.get().getName() == busName) {
-            if (eventName == "DrekkarInit" && !isInitialized) { // Reserved event name. Triggers whenReady
+        if (dispatcher.get() != null && dispatcher.get().getName().equals(busName)) {
+            if (eventName.equals("DrekkarInit") && !isInitialized) { // Reserved event name.
+                // Triggers whenReady
                 // Initialization must be run on the main thread. Otherwise, some events would be triggered before onReady
                 // has been run and hence be lost.
                 isInitialized = true;

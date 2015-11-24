@@ -79,9 +79,9 @@ class DataSerializer {
                 }
             }
 
-            if (input == "true") {
+            if (input.equals("true")) {
                 return true;
-            } else if (input == "false") {
+            } else if (input.equals("false")) {
                 return false;
             }
 

@@ -25,12 +25,12 @@ class WebViewJSEndpoint {
 
 
         @JavascriptInterface
-        int getHashCode() {
+        public int getHashCode() {
             return hashCode;
         }
 
         @JavascriptInterface
-        void send(int webViewHash, String busName, String eventName, String data) {
+        public void send(int webViewHash, String busName, String eventName, String data) {
             owner.handle(webViewHash, busName, eventName, data);
         }
     }

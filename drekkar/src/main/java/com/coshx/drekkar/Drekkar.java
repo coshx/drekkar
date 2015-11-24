@@ -48,10 +48,10 @@ public class Drekkar {
                         data = "null";
                     }
 
-                    if (name == DEFAULT_BUS_NAME) {
-                        toRun = "Caravel.getDefault()";
+                    if (name.equals(DEFAULT_BUS_NAME)) {
+                        toRun = "Drekkar.getDefault()";
                     } else {
-                        toRun = "Caravel.get(\"" + name + "\")";
+                        toRun = "Drekkar.get(\"" + name + "\")";
                     }
 
                     toRun += ".raise(\"" + eventName + "\", " + data + ")";
@@ -132,7 +132,7 @@ public class Drekkar {
             int i = 0;
 
             for (EventBus b : buses) {
-                if (b == bus) {
+                if (b.equals(bus)) {
                     buses.remove(i);
                     return;
                 }

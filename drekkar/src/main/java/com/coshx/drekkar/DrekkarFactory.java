@@ -46,7 +46,7 @@ class DrekkarFactory {
     }
 
     static Drekkar get(String name) {
-        if (name == Drekkar.DEFAULT_BUS_NAME) {
+        if (name.equals(Drekkar.DEFAULT_BUS_NAME)) {
             return getDefault();
         } else {
             if (buses.containsKey(name)) {
