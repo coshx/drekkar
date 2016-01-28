@@ -22,8 +22,11 @@ class DataSerializer {
         while (iterator.hasNext()) {
             String key = iterator.next();
             Object value = object.get(key);
+
             if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
+            } else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
             }
             dictionary.put(key, value);
         }
@@ -33,13 +36,19 @@ class DataSerializer {
 
     private static List toList(JSONArray array) throws JSONException {
         List list = new ArrayList();
+
         for (int i = 0, s = array.length(); i < s; i++) {
             Object o = array.get(i);
+
             if (o instanceof JSONObject) {
                 o = toMap((JSONObject) o);
+            } else if (o instanceof JSONArray) {
+                o = toList((JSONArray) o);
             }
+
             list.add(o);
         }
+
         return list;
     }
 
@@ -98,6 +107,7 @@ class DataSerializer {
             boolean isNumber = true;
             for (int i = 0, s = input.length(); i < s; i++) {
                 char c = input.charAt(i);
+
                 if (Character.isDigit(c) || c == '.' || c == ',') {
                     // Do nothing
                 } else {
@@ -109,8 +119,12 @@ class DataSerializer {
             if (isNumber) {
                 try {
                     return Integer.parseInt(input);
-                } catch (Exception e) {
-                    return Double.parseDouble(input);
+                } catch (Exception e1) {
+                    try {
+                        return Double.parseDouble(input);
+                    } catch (Exception e2) {
+                        return null;
+                    }
                 }
             }
         }

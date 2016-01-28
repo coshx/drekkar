@@ -3,7 +3,6 @@
 class Drekkar
   @default = null
   @buses = []
-  @hashCode = DrekkarWebViewJSEndpoint.getHashCode()
 
   constructor: (name)  ->
     @name = name
@@ -20,7 +19,7 @@ class Drekkar
           dataToSend = JSON.stringify(data)
         else
           dataToSend = data
-      DrekkarWebViewJSEndpoint.send Drekkar.hashCode, @name, eventName, dataToSend
+      DrekkarWebViewJSEndpoint.send @name, eventName, dataToSend
     ), 0
 
   getName: () ->
@@ -34,6 +33,7 @@ class Drekkar
 
   # Internal method only. Called by Android part for triggering events on the bus
   raise: (name, data) ->
+    parsedData = null
     if data instanceof Array or data instanceof Object or (typeof data == "string" or data instanceof String)
       # Data are already parsed, nothing to do
       parsedData = data

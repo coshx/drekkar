@@ -34,39 +34,8 @@ public class Drekkar {
         this.buses = new ArrayList<>();
     }
 
-    <T> void post(final String eventName, final T eventData) {
-        ThreadingHelper.background(
-            new Runnable() {
-                @Override
-                public void run() {
-                    String data;
-                    String toRun;
-
-                    if (eventData != null) {
-                        data = DataSerializer.serialize(eventData);
-                    } else {
-                        data = "null";
-                    }
-
-                    if (name.equals(DEFAULT_BUS_NAME)) {
-                        toRun = "Drekkar.getDefault()";
-                    } else {
-                        toRun = "Drekkar.get(\"" + name + "\")";
-                    }
-
-                    toRun += ".raise(\"" + eventName + "\", " + data + ")";
-
-                    synchronized (busLock) {
-                        for (EventBus b : buses) {
-                            b.forwardToJS(toRun);
-                        }
-                    }
-                }
-            }
-        );
-    }
-
-    void addBus(Object subscriber, WebView webView, WhenReady whenReady, Boolean inBackground) {
+    private void addBus(Object subscriber, WebView webView, WhenReady whenReady, Boolean
+        inBackground) {
         EventBus bus;
 
         // Test if an existing bus matching provided pair already exists
@@ -112,6 +81,7 @@ public class Drekkar {
                             if (b.getReference() == null && b.getWebView() == null) {
                                 // Watched pair was garbage collected. This bus is not needed anymore
                                 toRemove.add(i);
+                                b.notifyAboutCleaning();
                             }
                             i++;
                         }
@@ -120,6 +90,40 @@ public class Drekkar {
                         for (Integer j : toRemove) {
                             buses.remove(j - i);
                             i++;
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    <T> void post(final String eventName, final T eventData) {
+        ThreadingHelper.background(
+            new Runnable() {
+                @Override
+                public void run() {
+                    String data;
+                    String toRun;
+
+                    if (eventData != null) {
+                        data = DataSerializer.serialize(eventData);
+                    } else {
+                        data = "null";
+                    }
+
+                    toRun = "Drekkar.";
+
+                    if (name.equals(DEFAULT_BUS_NAME)) {
+                        toRun += "getDefault()";
+                    } else {
+                        toRun += "get(\"" + name + "\")";
+                    }
+
+                    toRun += ".raise(\"" + eventName + "\", " + data + ")";
+
+                    synchronized (busLock) {
+                        for (EventBus b : buses) {
+                            b.forwardToJS(toRun);
                         }
                     }
                 }
@@ -141,34 +145,42 @@ public class Drekkar {
         }
     }
 
-    void dispatch(final Arguments arguments) {
-        ThreadingHelper.background(
-            new Runnable() {
-                @Override
-                public void run() {
-                    Object data = null;
+    void dispatch(String busName, final String eventName, String rawData) {
+        if (!busName.equals(name)) {
+            // Different buses can use the same web view so same proxy
+            // If not a potential receiver, ignore event
+            return;
+        }
 
-                    if (arguments.eventData != null) {
-                        data = DataSerializer.deserialize(arguments.eventData);
-                    }
-
-                    synchronized (busLock) {
-                        for (EventBus b : buses) {
-                            final Object finalData = data;
-                            final EventBus finalBus = b;
-                            ThreadingHelper.background(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        finalBus.raise(arguments.eventName, finalData);
+        if (eventName.equals("DrekkarInit")) { // Reserved event name. Triggers whenReady
+            synchronized (busLock) {
+                for (EventBus b : buses) {
+                    b.onInit(); // Run on main/current thread
+                }
+            }
+        } else {
+            final Object eventData = DataSerializer.deserialize(rawData);
+            ThreadingHelper.background(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (busLock) {
+                            for (EventBus b : buses) {
+                                final EventBus finalBus = b;
+                                ThreadingHelper.background(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finalBus.raise(eventName, eventData);
+                                        }
                                     }
-                                }
-                            );
+                                );
+                            }
                         }
                     }
                 }
-            }
-        );
+            );
+        }
     }
 
     /**

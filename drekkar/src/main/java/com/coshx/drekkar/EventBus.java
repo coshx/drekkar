@@ -50,16 +50,24 @@ public class EventBus implements IWebViewJSEndpoint {
     private int                       onGoingInitializersId;
 
     EventBus(Drekkar dispatcher, Object reference, WebView webView) {
-        this.dispatcher = new WeakReference<Drekkar>(dispatcher);
-        this.reference = new WeakReference<Object>(reference);
-        this.webView = new WeakReference<WebView>(webView);
+        this.dispatcher = new WeakReference<>(dispatcher);
+        this.reference = new WeakReference<>(reference);
+        this.webView = new WeakReference<>(webView);
         this.isInitialized = false;
         this.subscribers = new ArrayList<>();
         this.initializers = new ArrayList<>();
         this.onGoingInitializers = new HashMap<>();
         this.onGoingInitializersId = 0;
 
-        WebViewJSEndpoint.subscribe(webView, this);
+        WebViewJSEndpointMediator.subscribe(webView, this);
+    }
+
+    private void unsubscribeFromProxy() {
+        WebView w = webView.get();
+
+        if (w != null) {
+            WebViewJSEndpointMediator.unsubscribe(w, this);
+        }
     }
 
     Object getReference() {
@@ -68,6 +76,10 @@ public class EventBus implements IWebViewJSEndpoint {
 
     WebView getWebView() {
         return webView.get();
+    }
+
+    void notifyAboutCleaning() {
+        unsubscribeFromProxy();
     }
 
     /**
@@ -87,14 +99,52 @@ public class EventBus implements IWebViewJSEndpoint {
         );
     }
 
+    void onInit() {
+        // Initialization must be run on the main thread. Otherwise, some events would be triggered before onReady
+        // has been run and hence be lost.
+        if (isInitialized) {
+            return;
+        }
+
+        synchronized (initializationLock) {
+            if (isInitialized) {
+                return;
+            }
+
+            for (Initializer initializer : initializers) {
+                final int index = onGoingInitializersId;
+                final WhenReady callback = initializer.callback;
+                Runnable action = new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.run(EventBus.this);
+                        onGoingInitializers.remove(index);
+                    }
+                };
+
+                onGoingInitializers.put(index, initializer);
+                onGoingInitializersId++;
+
+                if (initializer.inBackground) {
+                    ThreadingHelper.background(action);
+                } else {
+                    ThreadingHelper.main(action);
+                }
+            }
+
+            initializers = new ArrayList<>();
+            isInitialized = true;
+        }
+    }
+
     /**
      * Allows dispatcher to fire any event on this bus
      */
     void raise(final String name, final Object data) {
         synchronized (subscriberLock) {
             for (EventSubscriber s : subscribers) {
-                final EventSubscriber finalS = s;
                 if (s.name.equals(name)) {
+                    final EventSubscriber finalS = s;
                     Runnable action = new Runnable() {
                         @Override
                         public void run() {
@@ -183,44 +233,16 @@ public class EventBus implements IWebViewJSEndpoint {
     }
 
     @Override
-    public void handle(String busName, String eventName, String data) {
-        // All buses are notified about that incoming event. Then, each bus has to investigate first if it
-        // is a potential receiver
-        if (dispatcher.get() != null && dispatcher.get().getName().equals(busName)) {
-            if (eventName.equals("DrekkarInit") && !isInitialized) { // Reserved event name.
-                // Triggers whenReady
-                // Initialization must be run on the main thread. Otherwise, some events would be triggered before onReady
-                // has been run and hence be lost.
-                isInitialized = true;
+    public void onMessage(String busName, String eventName, String rawData) {
+        Drekkar d = dispatcher.get();
 
-                for (Initializer i : initializers) {
-                    final int index = onGoingInitializersId;
-                    final WhenReady callback = i.callback;
-                    Runnable action = new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.run(EventBus.this);
-                            onGoingInitializers.remove(index);
-                        }
-                    };
-
-                    onGoingInitializers.put(index, i);
-                    onGoingInitializersId++;
-
-                    if (i.inBackground) {
-                        ThreadingHelper.background(action);
-                    } else {
-                        ThreadingHelper.main(action);
-                    }
-                }
-
-                initializers = new ArrayList<>();
-            } else {
-                if (dispatcher.get() != null) {
-                    dispatcher.get().dispatch(new Arguments(busName, eventName, data));
-                }
-            }
+        if (d != null) {
+            d.dispatch(busName, eventName, rawData);
         }
+    }
+
+    public String getName() {
+        return dispatcher.get().getName();
     }
 
     /**
@@ -229,8 +251,9 @@ public class EventBus implements IWebViewJSEndpoint {
      * @param eventName Event's name
      */
     public void post(String eventName) {
-        if (dispatcher.get() != null) {
-            dispatcher.get().post(eventName, null);
+        Drekkar d = dispatcher.get();
+        if (d != null) {
+            d.post(eventName, null);
         }
     }
 
@@ -241,8 +264,10 @@ public class EventBus implements IWebViewJSEndpoint {
      * @param data      Data to post (see documentation for supported types)
      */
     public <T> void post(String eventName, T data) {
-        if (dispatcher.get() != null) {
-            dispatcher.get().post(eventName, data);
+        Drekkar d = dispatcher.get();
+
+        if (d != null) {
+            d.post(eventName, data);
         }
     }
 
@@ -271,12 +296,15 @@ public class EventBus implements IWebViewJSEndpoint {
         }
     }
 
-    public void unregister(Object subscriber) {
-        if (reference.get() != null && subscriber.hashCode() == reference.get().hashCode()) {
-            dispatcher.get().deleteBus(this);
-            WebViewJSEndpoint.unsubscribe(webView.get(), this);
-            reference = new WeakReference<Object>(null);
-            webView = new WeakReference<WebView>(null);
-        }
+    public void unregister() {
+        Drekkar d = dispatcher.get();
+
+        d.deleteBus(this);
+
+        unsubscribeFromProxy();
+
+        dispatcher = new WeakReference<Drekkar>(null);
+        reference = new WeakReference<Object>(null);
+        webView = new WeakReference<WebView>(null);
     }
 }

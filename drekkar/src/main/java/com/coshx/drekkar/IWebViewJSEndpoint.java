@@ -5,5 +5,5 @@ package com.coshx.drekkar;
  * @brief
  */
 interface IWebViewJSEndpoint {
-    void handle(String busName, String eventName, String data);
+    void onMessage(String busName, String eventName, String rawData);
 }

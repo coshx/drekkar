@@ -5,8 +5,6 @@ Drekkar = (function() {
 
   Drekkar.buses = [];
 
-  Drekkar.hashCode = DrekkarWebViewJSEndpoint.getHashCode();
-
   function Drekkar(name) {
     this.name = name;
     this.subscribers = [];
@@ -24,7 +22,7 @@ Drekkar = (function() {
             dataToSend = data;
           }
         }
-        return DrekkarWebViewJSEndpoint.send(Drekkar.hashCode, _this.name, eventName, dataToSend);
+        return DrekkarWebViewJSEndpoint.send(_this.name, eventName, dataToSend);
       };
     })(this)), 0);
   };
@@ -46,6 +44,7 @@ Drekkar = (function() {
 
   Drekkar.prototype.raise = function(name, data) {
     var e, i, len, parsedData, ref, results;
+    parsedData = null;
     if (data instanceof Array || data instanceof Object || (typeof data === "string" || data instanceof String)) {
       parsedData = data;
     } else {
@@ -90,5 +89,3 @@ Drekkar = (function() {
   return Drekkar;
 
 })();
-
-//# sourceMappingURL=drekkar.js.map
