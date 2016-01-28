@@ -40,7 +40,7 @@ public class UnregistrationActivity extends WebActivity {
                                     new TimerTask() {
                                         @Override
                                         public void run() {
-                                            UnregistrationActivity.this.bus.unregister(UnregistrationActivity.this);
+                                            UnregistrationActivity.this.bus.unregister();
                                         }
                                     },
                                     2 * 1000
