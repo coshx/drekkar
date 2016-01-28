@@ -159,7 +159,7 @@ public class Drekkar {
                 }
             }
         } else {
-            final Object eventData = DataSerializer.deserialize(rawData);
+            final Object eventData = (rawData == null) ? null : DataSerializer.deserialize(rawData);
             ThreadingHelper.background(
                 new Runnable() {
                     @Override
