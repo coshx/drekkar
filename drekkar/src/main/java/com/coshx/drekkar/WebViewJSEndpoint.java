@@ -15,8 +15,18 @@ class WebViewJSEndpoint {
 
     private List<IWebViewJSEndpoint> subscribers = new ArrayList<>();
 
-    WebViewJSEndpoint(WebView webView) {
-        webView.addJavascriptInterface(this, "DrekkarWebViewJSEndpoint");
+    WebViewJSEndpoint(final WebView webView) {
+        ThreadingHelper.main(
+            new Runnable() {
+                @Override
+                public void run() {
+                    webView.addJavascriptInterface(
+                        WebViewJSEndpoint.this,
+                        "DrekkarWebViewJSEndpoint"
+                    );
+                }
+            }
+        );
     }
 
     void subscribe(IWebViewJSEndpoint subscriber) {
@@ -49,8 +59,15 @@ class WebViewJSEndpoint {
         return subscribers.size() > 0;
     }
 
-    void willBeDeleted(WebView webview) {
-        webview.removeJavascriptInterface("DrekkarWebViewJSEndpoint");
+    void willBeDeleted(final WebView webview) {
+        ThreadingHelper.main(
+            new Runnable() {
+                @Override
+                public void run() {
+                    webview.removeJavascriptInterface("DrekkarWebViewJSEndpoint");
+                }
+            }
+        );
     }
 
     @JavascriptInterface
