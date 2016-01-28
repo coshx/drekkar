@@ -81,7 +81,7 @@ public class Drekkar {
                             if (b.getReference() == null && b.getWebView() == null) {
                                 // Watched pair was garbage collected. This bus is not needed anymore
                                 toRemove.add(i);
-                                b.notifyAboutCleaning();
+                                b.willBeDeleted();
                             }
                             i++;
                         }

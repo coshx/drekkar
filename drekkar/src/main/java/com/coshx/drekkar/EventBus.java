@@ -78,7 +78,7 @@ public class EventBus implements IWebViewJSEndpoint {
         return webView.get();
     }
 
-    void notifyAboutCleaning() {
+    void willBeDeleted() {
         unsubscribeFromProxy();
     }
 
