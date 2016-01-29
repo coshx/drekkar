@@ -1,5 +1,7 @@
 # Drekkar
 
+[![Release](https://jitpack.io/v/coshx/drekkar.svg)](https://jitpack.io/#coshx/drekkar)
+
 [![Join the chat at https://gitter.im/coshx/drekkar](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/coshx/drekkar?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **An event bus for sending messages between WebView and embedded JS. [Alter ego of Caravel](https://github.com/coshx/caravel).**
