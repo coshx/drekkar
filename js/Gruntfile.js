@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                     banner: '/** Drekkar ' + version + ' - https://github.com/coshx/drekkar */\n'
                 },
                 files: {
-                    '../drekkar/src/main/res/raw/drekkar.min.js': '../drekkar/src/main/res/raw/drekkar.js'
+                    '../drekkar/src/main/res/raw/drekkar_min.js': '../drekkar/src/main/res/raw/drekkar.js'
                 }
             }
         },
