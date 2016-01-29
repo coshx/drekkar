@@ -27,6 +27,9 @@ proguard/
 *.log
 
 # Tmp
-.idea
 .DS_Store
 *~
+*.map
+
+.idea
+js/node_modules

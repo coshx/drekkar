@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.coshx.drekkartest"
-          xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    package="com.coshx.drekkartest"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     >
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +24,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".BasicTriggeringActivity" />
+        <activity android:name=".BenchmarkActivity" />
+        <activity android:name=".EventDataActivity" />
+        <activity android:name=".EventNameActivity" />
+        <activity android:name=".InitializationActivity" />
+        <activity android:name=".MultipleSubscriberActivity" />
+        <activity android:name=".ThreadingActivity" />
+        <activity android:name=".TwoBucketActivity" />
+        <activity android:name=".TwoBusActivity" />
+        <activity android:name=".TwoEventActivity" />
+        <activity android:name=".UnregistrationActivity" />
     </application>
 
 </manifest>
