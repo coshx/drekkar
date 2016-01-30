@@ -29,6 +29,32 @@
 
 ## Installation
 
+### Using JitPack
+
+Merge this code into your root build.gradle file:
+
+```groovy
+allprojects {
+	repositories {
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+Then, add this dependency to your module:
+
+```groovy
+dependencies {
+    compile 'com.github.coshx:drekkar:v0.1.1'
+}
+```
+
+Finally, you need to load the internal JS script Drekkar is using to make magic happen. You can either use `R.draw.drekkar_min` or add the minified JS script from [the latest release](https://github.com/coshx/drekkar/releases) to your `raw` resources. This script must be loaded in any webpage you are using Drekkar.
+
+### Using as a submodule
+
+Clone this repo and add the `drekkar` module to your workspace.
+
 ## Get started
 
 Drekkar allows developers to communicate between their `WebView` and the embedded JS. You can send any kind of message between these two folks.
@@ -81,7 +107,7 @@ And voilà!
 
 ## Porting your app from Caravel to Drekkar
 
-Super duper easy. Just use the same codebase and add this after having loaded the Drekkar script:
+Super duper easy. Just use the same codebase and use the JS script from Drekkar. Finally, add this after having loaded the Drekkar script:
 
 ```javascript
 var Caravel = Drekkar;
