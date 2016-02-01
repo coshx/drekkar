@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @class DrekkarFactory
- * @brief Manages the different Drekkar instances and ensures they are all singletons
+ * DrekkarFactory
+ * <p/>
+ * Manages the different Drekkar instances and ensures they are all singletons
  */
 class DrekkarFactory {
     private static final Object defaultBusLock = new Object();

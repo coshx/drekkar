@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @class EventBus
- * @brief In charge of watching a subscriber / webview pair. If any event is captured, it forwards
- * it to dispatcher (except init one). Argument passed as well when whenReady callback is run.
+ * EventBus
+ * <p/>
+ * In charge of watching a subscriber / webview pair.
+ * <p/>
+ * Deals with any request from the user side, as well as the watched pair, and forward them to the
+ * dispatcher.
  */
-public class EventBus implements IWebViewJSEndpoint {
+public class EventBus {
     private class Initializer {
         WhenReady callback;
         Boolean   inBackground;
@@ -30,6 +33,10 @@ public class EventBus implements IWebViewJSEndpoint {
     private WeakReference<Object>  reference;
     private WeakReference<WebView> webView;
     private WeakReference<Drekkar> dispatcher;
+    /**
+     * The field below prevents the onMessage method to be public and accessible by users
+     */
+    private IWebViewJSEndpoint     embeddedEndpoint;
 
     /**
      * Bus subscribers
@@ -59,14 +66,25 @@ public class EventBus implements IWebViewJSEndpoint {
         this.onGoingInitializers = new HashMap<>();
         this.onGoingInitializersId = 0;
 
-        WebViewJSEndpointMediator.subscribe(webView, this);
+        this.embeddedEndpoint = new IWebViewJSEndpoint() {
+            @Override
+            public void onMessage(String busName, String eventName, String rawData) {
+                Drekkar d = EventBus.this.dispatcher.get();
+
+                if (d != null) {
+                    d.dispatch(busName, eventName, rawData);
+                }
+            }
+        };
+
+        WebViewJSEndpointMediator.subscribe(webView, this.embeddedEndpoint);
     }
 
     private void unsubscribeFromProxy() {
         WebView w = webView.get();
 
         if (w != null) {
-            WebViewJSEndpointMediator.unsubscribe(w, this);
+            WebViewJSEndpointMediator.unsubscribe(w, this.embeddedEndpoint);
         }
     }
 
@@ -232,15 +250,9 @@ public class EventBus implements IWebViewJSEndpoint {
         );
     }
 
-    @Override
-    public void onMessage(String busName, String eventName, String rawData) {
-        Drekkar d = dispatcher.get();
-
-        if (d != null) {
-            d.dispatch(busName, eventName, rawData);
-        }
-    }
-
+    /**
+     * Current name
+     */
     public String getName() {
         return dispatcher.get().getName();
     }
@@ -296,6 +308,9 @@ public class EventBus implements IWebViewJSEndpoint {
         }
     }
 
+    /**
+     * Unregisters subscriber from bus
+     */
     public void unregister() {
         Drekkar d = dispatcher.get();
 

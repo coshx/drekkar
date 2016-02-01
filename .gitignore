@@ -33,3 +33,4 @@ proguard/
 
 .idea
 js/node_modules
+javadoc/

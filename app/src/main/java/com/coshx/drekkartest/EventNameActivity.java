@@ -7,10 +7,6 @@ import com.coshx.drekkar.Drekkar;
 import com.coshx.drekkar.EventBus;
 import com.coshx.drekkar.WhenReady;
 
-/**
- * @class EventNameActivity
- * @brief
- */
 public class EventNameActivity extends WebActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

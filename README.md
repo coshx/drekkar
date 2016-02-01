@@ -81,7 +81,7 @@ class MyActivity extends Activity {
                 list.add(2);
                 list.add(3);
 
-                bus.post("MyEvent", data: list);
+                bus.post("MyEvent", list);
 
                 MyActivity.this.bus = bus; // You can save your bus for firing events later
             }
@@ -125,7 +125,7 @@ However, if you think everything is good with your codebase, feel free to open a
 
 ### What object should I use as a subscriber?
 
-A subscriber could be any object **except the watched target**. We recommend to use the activity as a subscriber (it is a common pattern).
+A subscriber could be any object **except the watched target**. We recommend to use the activity/current context as a subscriber (it is a common pattern).
 
 ### Reserved names
 

@@ -1,8 +1,7 @@
 package com.coshx.drekkar;
 
 /**
- * @class Arguments
- * @brief
+ * Arguments
  */
 class Arguments {
     String busName;
