@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @class Drekkar
- * @brief Main class of the library. Dispatches events among buses.
+ * Drekkar
+ * <p/>
+ * Main class of the library. Dispatches events among buses.
  */
 public class Drekkar {
     private static final Object busLock          = new Object();
@@ -193,9 +194,10 @@ public class Drekkar {
     /**
      * Returns default bus
      *
-     * @param subscriber Subscriber
+     * @param subscriber Subscriber (usually the activity/current context)
      * @param webView    WebView to watch
      * @param whenReady  Action to run when JS counterpart is ready
+     * @return Current instance
      */
     public static Drekkar getDefault(Object subscriber, WebView webView, WhenReady whenReady) {
         Drekkar d = DrekkarFactory.getDefault();
@@ -204,11 +206,12 @@ public class Drekkar {
     }
 
     /**
-     * Returns default bus and run callback on main thread
+     * Returns default bus and runs callback on main thread
      *
-     * @param subscriber Subscriber
+     * @param subscriber Subscriber (usually the activity/current context)
      * @param webView    WebView to watch
      * @param whenReady  Action to run when JS counterpart is ready
+     * @return Current instance
      */
     public static Drekkar getDefault(Object subscriber, WebView webView, WhenReadyOnMain
         whenReady) {
@@ -220,10 +223,11 @@ public class Drekkar {
     /**
      * Returns custom bus
      *
-     * @param subscriber Subscriber
+     * @param subscriber Subscriber (usually the activity/current context)
      * @param name       Bus name
      * @param webView    WebView to watch
      * @param whenReady  Action to run when JS counterpart is ready
+     * @return Current instance
      */
     public static Drekkar get(Object subscriber, String name, WebView webView, WhenReady
         whenReady) {
@@ -233,12 +237,13 @@ public class Drekkar {
     }
 
     /**
-     * Returns custom bus and run callback on main thread
+     * Returns custom bus and runs callback on main thread
      *
-     * @param subscriber Subscriber
+     * @param subscriber Subscriber (usually the activity/current context)
      * @param name       Bus name
      * @param webView    WebView to watch
      * @param whenReady  Action to run when JS counterpart is ready
+     * @return Current instance
      */
     public static Drekkar get(Object subscriber, String name, WebView webView, WhenReadyOnMain
         whenReady) {
