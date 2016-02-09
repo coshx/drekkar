@@ -1,4 +1,4 @@
-# Drekkar
+![Logo](https://raw.githubusercontent.com/coshx/drekkar/master/logo.png)
 
 [![Release](https://jitpack.io/v/coshx/drekkar.svg)](https://jitpack.io/#coshx/drekkar)
 
