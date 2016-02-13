@@ -1,6 +1,7 @@
 package com.coshx.drekkar;
 
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -10,8 +11,12 @@ import android.os.Looper;
  */
 class ThreadingHelper {
     static void background(final Runnable action) {
-        Thread thread = new Thread(action);
-        thread.start();
+        main(new Runnable() {
+            @Override
+            public void run() {
+                AsyncTask.execute(action);
+            }
+        });
     }
 
     static void main(final Runnable action) {
