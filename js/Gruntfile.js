@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
     'use strict';
 
-    var version = '0.1.1';
+    var version = 'navajo-white-butterfly-v0.1.2';
 
     // Project configuration
     grunt.initConfig({
